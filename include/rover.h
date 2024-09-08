@@ -3,11 +3,12 @@
 
 enum 
 {
-   ROVER_STOP = 0b0,
-   ROVER_FORWARD = 0b1010,
-   ROVER_BACKWARDS = 0b0101,
-   ROVER_LEFT = 0b1001,
-   ROVER_RIGHT = 0b0110,
+   ROVER_STOP = MOTOR_STOP,
+                                // Right           Left
+   ROVER_FORWARD =      (MOTOR_FORWARD << 2)    + MOTOR_FORWARD,
+   ROVER_BACKWARDS =    (MOTOR_BACKWARDS << 2)  + MOTOR_BACKWARDS,
+   ROVER_LEFT =         (MOTOR_FORWARD << 2)    + MOTOR_BACKWARDS,
+   ROVER_RIGHT =        (MOTOR_BACKWARDS << 2)  + MOTOR_FORWARD
 };
 
 int rover_setup();
