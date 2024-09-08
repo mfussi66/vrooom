@@ -36,65 +36,20 @@ int rover_setup()
    }
 }
 
-void rover_run(int pwm_set)
+void rover_run(int pwm_set, unsigned int direction)
 {
-    if(motion_state == 0)
-        rover_forward(pwm_set);
-
-    switch (motion_state)
+    if(direction != ROVER_FORWARD &&
+        direction != ROVER_BACKWARDS &&
+        direction != ROVER_LEFT &&
+        direction != ROVER_RIGHT &&
+        direction != ROVER_STOP)
     {
-    case 1:
-        rover_forward(pwm_set);
-        break;
-        case 2:
-        rover_backwards(pwm_set);
-        break;
-    case 3:
-        rover_backwards(pwm_set);
-        break;
-    case 4:
-        rover_backwards(pwm_set);
-        break;
-    default:
         rover_stop();
-        break;
+        return;
     }
-}
 
-void rover_forward(int pwm_set)
-{
-    motor_forward(&motor_left);
-    motor_forward(&motor_right);
-    motor_pwm_set(&motor_left, pwm_set);
-    motor_pwm_set(&motor_right, pwm_set);
-    motion_state = 1;
-}
-
-void rover_backwards(int pwm_set)
-{
-    motor_backwards(&motor_left);
-    motor_backwards(&motor_right);
-    motor_pwm_set(&motor_left, pwm_set);
-    motor_pwm_set(&motor_right, pwm_set);
-    motion_state = 2;
-}
-
-void rover_left(int pwm_set)
-{
-    motor_backwards(&motor_left);
-    motor_forward(&motor_right);
-    motor_pwm_set(&motor_left, pwm_set);
-    motor_pwm_set(&motor_right, pwm_set);
-    motion_state = 3;
-}
-
-void rover_right(int pwm_set)
-{
-    motor_forward(&motor_left);
-    motor_backwards(&motor_right);
-    motor_pwm_set(&motor_left, pwm_set);
-    motor_pwm_set(&motor_right, pwm_set);
-    motion_state = 4;
+    motor_run(&motor_left, direction & 0b11, pwm_set);
+    motor_run(&motor_right, (direction >> 2), pwm_set);
 }
 
 void rover_stop()

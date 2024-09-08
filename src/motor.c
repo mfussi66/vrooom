@@ -30,11 +30,12 @@ void motor_read_encoder(motor* m)
    m->encoder_pulse_prev = v;
 }
 
-void motor_forward(motor* m)
+void motor_command_set(motor* m, unsigned int cmd)
 {
    int r = LG_OKAY;
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[0], 0);
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[1], 1);
+
+   r = lgGpioWrite(m->chip_handle, m->io.outputs[0], cmd & 1);
+   r = lgGpioWrite(m->chip_handle, m->io.outputs[1], cmd >> 1);
     
    if (r != LG_OKAY) 
    {
@@ -42,34 +43,10 @@ void motor_forward(motor* m)
       return;
    }
 
-   m->direction = 1;
-}
-
-void motor_backwards(motor* m)
-{
-   int r = LG_OKAY;
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[0], 1);
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[1], 0);
-    
-   if (r != LG_OKAY) 
-   {
-      printf("error\n");
-      return;
-   }
-
-   m->direction = -1;
-}
-
-void motor_stop(motor* m)
-{
-   int r = LG_OKAY;
-   
-   motor_pwm_stop(m);
-   
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[0], 0);
-   r = lgGpioWrite(m->chip_handle, m->io.outputs[1], 0);
-
-   if (r != LG_OKAY) printf("error\n");
+   if(cmd == MOTOR_FORWARD)
+      m->direction = 1;
+   else if(cmd == MOTOR_BACKWARDS)
+      m->direction = -1;
 }
 
 void motor_pwm_set(motor* m, int pwm_set)
@@ -79,7 +56,14 @@ void motor_pwm_set(motor* m, int pwm_set)
     m->pwm = pwm_set;
 }
 
-void motor_pwm_stop(motor* m)
+void motor_run(motor* m, unsigned int cmd, int pwm_set)
+{
+   motor_command_set(m, cmd);
+   motor_pwm_set(m, pwm_set);
+}
+
+void motor_stop(motor* m)
 {
    motor_pwm_set(m, 0);
+   motor_command_set(m, MOTOR_STOP);
 }

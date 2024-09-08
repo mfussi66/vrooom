@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
    rover_setup();
 
-   rover_run(30);
+   rover_run(30, ROVER_RIGHT);
 
    int encoder_left = 0;
    int encoder_right = 0;
