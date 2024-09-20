@@ -9,6 +9,8 @@ motor motor_right;
 int chip_handle = 0;
 
 int motion_state = 0;
+double l_old = 0;
+double r_old = 0;
 
 int rover_setup()
 {
@@ -36,7 +38,7 @@ int rover_setup()
    }
 }
 
-void rover_run(int pwm_set, unsigned int direction)
+void rover_run(int pwm_set_left,int pwm_set_right, unsigned int direction)
 {
     if(direction != ROVER_FORWARD &&
         direction != ROVER_BACKWARDS &&
@@ -48,8 +50,8 @@ void rover_run(int pwm_set, unsigned int direction)
         return;
     }
 
-    motor_run(&motor_left, direction & 0b11, pwm_set);
-    motor_run(&motor_right, (direction >> 2), pwm_set);
+    motor_run(&motor_left, direction & 0b11, pwm_set_left);
+    motor_run(&motor_right, (direction >> 2), pwm_set_right);
 }
 
 void rover_stop()
@@ -72,4 +74,32 @@ void rover_read_encoders(int* encoder_left, int* encoder_right)
 
     *encoder_left = motor_left.encoder;
     *encoder_right = motor_right.encoder;
+}
+
+void rover_get_wheels_angles(double* left, double* right)
+{
+
+    motor_read_encoder(&motor_left);
+    motor_read_encoder(&motor_right);
+    *left = motor_get_angle(&motor_left);
+    *right = motor_get_angle(&motor_right);
+}
+
+void rover_get_wheels_speeds(int window, double Ts, double* vl, double* vr)
+{
+    motor_read_encoder(&motor_left);
+    motor_read_encoder(&motor_right);
+    double l = motor_get_angle(&motor_left);
+    double r = motor_get_angle(&motor_right);
+
+    static int cnt = 0;
+
+    if(++cnt % window == 0)
+    {
+        *vl = (l - l_old)/(Ts * (double)window);
+        l_old = l;
+        *vr = (r - r_old)/(Ts * (double)window);
+        r_old = r;
+        cnt = 0;
+    }
 }

@@ -26,7 +26,8 @@ void motor_read_encoder(motor* m)
 {
    int v = lgGpioRead(m->chip_handle, m->io.inputs[0]);
    
-   m->encoder += m->direction * abs(v - m->encoder_pulse_prev);  
+   m->encoder += m->direction * abs(v - m->encoder_pulse_prev);
+
    m->encoder_pulse_prev = v;
 }
 

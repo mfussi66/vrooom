@@ -13,12 +13,16 @@ enum
 
 int rover_setup();
 
-void rover_run(int pwm_set, unsigned int direction);
+void rover_run(int pwm_set_left,int pwm_set_right, unsigned int direction);
 
 void rover_stop();
 
 void rover_close();
 
 void rover_read_encoders(int* encoder_left, int* encoder_right);
+
+void rover_get_wheels_angles(double* left, double* right);
+
+void rover_get_wheels_speeds(int window, double Ts, double* vl, double* vr);
 
 #endif 

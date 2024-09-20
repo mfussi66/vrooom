@@ -2,8 +2,11 @@
 #define MOTOR_H
 
 #include <hardware.h>
-
+#include <math.h>
+#include <stdio.h>
 #define PWM_FREQ 1000
+
+#define ENCODER_RESOLUTION 1986.0F
 
 enum 
 {
@@ -16,7 +19,7 @@ typedef struct
 {
    int motor_id;
    int chip_handle;
-   int encoder;
+   double encoder;
    int encoder_pulse_prev;
    int pwm;
    int direction;
@@ -35,4 +38,8 @@ void motor_stop(motor* m);
 
 void motor_pwm_set(motor* m, int pwm_set);
 
+double static inline motor_get_angle(motor* m)
+{
+   return ((float)m->encoder) / ENCODER_RESOLUTION * 2.0 * M_PI;
+}
 #endif
