@@ -1,5 +1,7 @@
 #include <motor.h>
 #include <rover.h>
+#include <control.h>
+
 #include <stdio.h>
 #include <lgpio.h>
 
@@ -67,39 +69,47 @@ void rover_close()
     free_stuff(chip_handle);
 }
 
-void rover_read_encoders(int* encoder_left, int* encoder_right)
+void rover_read_encoders()
 {
     motor_read_encoder(&motor_left);
     motor_read_encoder(&motor_right);
-
-    *encoder_left = motor_left.encoder;
-    *encoder_right = motor_right.encoder;
 }
 
 void rover_get_wheels_angles(double* left, double* right)
 {
-
-    motor_read_encoder(&motor_left);
-    motor_read_encoder(&motor_right);
     *left = motor_get_angle(&motor_left);
     *right = motor_get_angle(&motor_right);
 }
 
-void rover_get_wheels_speeds(int window, double Ts, double* vl, double* vr)
+void rover_estimate_wheels_speeds()
 {
-    motor_read_encoder(&motor_left);
-    motor_read_encoder(&motor_right);
-    double l = motor_get_angle(&motor_left);
-    double r = motor_get_angle(&motor_right);
+    motor_estimate_speed(&motor_left, 64, 0.001);
+    motor_estimate_speed(&motor_right, 64, 0.001);
+}
 
-    static int cnt = 0;
+void rover_get_wheels_speeds(double* vl, double* vr)
+{
+    *vl = motor_left.speed;
+    *vr = motor_right.speed;
+}
 
-    if(++cnt % window == 0)
-    {
-        *vl = (l - l_old)/(Ts * (double)window);
-        l_old = l;
-        *vr = (r - r_old)/(Ts * (double)window);
-        r_old = r;
-        cnt = 0;
-    }
+void rover_run_speed_ctrl(double l_ref, double r_ref)
+{
+    double y[2];
+    double r[2] = {l_ref, r_ref};
+    double u[2];
+
+    rover_get_wheels_speeds(&y[0], &y[1]);
+
+    motion_control_step(r, y, u);
+
+    if(u[0] < 0)
+        motor_run(&motor_left, MOTOR_BACKWARDS, u[0]);
+    else
+        motor_run(&motor_right, MOTOR_FORWARD, u[0]);
+
+    if(u[1] < 0)
+        motor_run(&motor_left, MOTOR_BACKWARDS, u[1]);
+    else
+        motor_run(&motor_right, MOTOR_FORWARD, u[1]);
 }

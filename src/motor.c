@@ -26,9 +26,21 @@ void motor_read_encoder(motor* m)
 {
    int v = lgGpioRead(m->chip_handle, m->io.inputs[0]);
    
+   m->encoder_prev = m->encoder;
+
    m->encoder += m->direction * abs(v - m->encoder_pulse_prev);
 
    m->encoder_pulse_prev = v;
+}
+
+void motor_estimate_speed(motor* m, int window, double Ts)
+{
+    static int cnt = 0;
+    if(++cnt % window == 0)
+    {
+        m->speed = (m->encoder - m->encoder_prev)/(Ts * (double)window);
+        cnt = 0;
+    }
 }
 
 void motor_command_set(motor* m, unsigned int cmd)
@@ -60,6 +72,7 @@ void motor_pwm_set(motor* m, int pwm_set)
 void motor_run(motor* m, unsigned int cmd, int pwm_set)
 {
    motor_command_set(m, cmd);
+   
    motor_pwm_set(m, pwm_set);
 }
 

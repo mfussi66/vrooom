@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(rover C)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
 add_executable(${PROJECT_NAME})
@@ -12,6 +12,7 @@ target_sources(${PROJECT_NAME}
         src/main.c
         src/rover.c
         src/motor.c
+        src/control.c
         src/hardware.c
 )
 

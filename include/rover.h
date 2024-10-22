@@ -19,10 +19,14 @@ void rover_stop();
 
 void rover_close();
 
-void rover_read_encoders(int* encoder_left, int* encoder_right);
+void rover_read_encoders();
 
 void rover_get_wheels_angles(double* left, double* right);
 
-void rover_get_wheels_speeds(int window, double Ts, double* vl, double* vr);
+void rover_estimate_wheels_speeds();
+
+void rover_get_wheels_speeds(double* vl, double* vr);
+
+void rover_run_speed_ctrl(double l_ref, double r_ref);
 
 #endif 

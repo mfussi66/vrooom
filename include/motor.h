@@ -20,6 +20,8 @@ typedef struct
    int motor_id;
    int chip_handle;
    double encoder;
+   double encoder_prev;
+   double speed;
    int encoder_pulse_prev;
    int pwm;
    int direction;
@@ -29,6 +31,8 @@ typedef struct
 int motor_setup(motor *m, int h, int id, gpioGroup* gpio);
 
 void motor_read_encoder(motor* m);
+
+void motor_estimate_speed(motor* m, int window, double Ts);
 
 void motor_run(motor* m, unsigned int cmd, int pwm_set);
 
