@@ -34,13 +34,9 @@ void motor_read_encoder(motor* m);
 
 void motor_estimate_speed(motor* m, int window, double Ts);
 
-void motor_run(motor* m, unsigned int cmd, int pwm_set);
-
-void motor_command_set(motor* m, unsigned int cmd);
+int motor_run(motor* m, unsigned int cmd, int pwm_set);
 
 void motor_stop(motor* m);
-
-void motor_pwm_set(motor* m, int pwm_set);
 
 double static inline motor_get_angle(motor* m)
 {

@@ -33,17 +33,17 @@ void motor_read_encoder(motor* m)
 
 void motor_estimate_speed(motor* m, int window, double Ts)
 {
-    static int cnt = 0;
-    if(++cnt % window == 0)
+    static int cnt[2] = {0, 0};
+
+    if(++cnt[m->motor_id] % window == 0)
     {
-   
         m->speed = (m->encoder - m->encoder_prev)/(Ts * (double)window);
         m->encoder_prev = m->encoder;
-        cnt = 0;
+        cnt[m->motor_id] = 0;
     }
 }
 
-void motor_command_set(motor* m, unsigned int cmd)
+int motor_run(motor* m, unsigned int cmd, int pwm_set)
 {
    int r = LG_OKAY;
 
@@ -52,32 +52,20 @@ void motor_command_set(motor* m, unsigned int cmd)
     
    if (r != LG_OKAY) 
    {
-      printf("error\n");
-      return;
+      printf("Could not set direction!\n");
+      return r;
    }
 
-   if(cmd == MOTOR_FORWARD)
-      m->direction = 1;
-   else if(cmd == MOTOR_BACKWARDS)
-      m->direction = -1;
-}
+   m->direction = (cmd == MOTOR_FORWARD) - (cmd == MOTOR_BACKWARDS);
 
-void motor_pwm_set(motor* m, int pwm_set)
-{
-   lgTxPwm(m->chip_handle, m->io.outputs[2], PWM_FREQ, pwm_set, 0, 0);
+   r = lgTxPwm(m->chip_handle, m->io.outputs[2], PWM_FREQ, pwm_set, 0, 0);
 
-    m->pwm = pwm_set;
-}
+   m->pwm = pwm_set;
 
-void motor_run(motor* m, unsigned int cmd, int pwm_set)
-{
-   motor_command_set(m, cmd);
-   
-   motor_pwm_set(m, pwm_set);
+   return r;
 }
 
 void motor_stop(motor* m)
 {
-   motor_pwm_set(m, 0);
-   motor_command_set(m, MOTOR_STOP);
+   motor_run(m, MOTOR_STOP, 0);
 }
