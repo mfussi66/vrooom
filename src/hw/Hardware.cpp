@@ -1,8 +1,13 @@
+#ifdef USE_LGPIO
+    #include <lgpio.h>
 
-#include <lgpio.h>
-#include <hardware.h>
+#include <Hardware.h>
+#include "GPIOInterface.h"
 
-gpioGroup motor_left_io = {
+class Hardware : public GPIOInterface
+{
+private:
+   gpioGroup motor_left_io = {
    {M_ENCODER_L}, 
    {M_IN1_L, M_IN2_L, M_EN_L}
 };
@@ -10,6 +15,24 @@ gpioGroup motor_right_io = {
    {M_ENCODER_R}, 
    {M_IN1_R, M_IN2_R, M_EN_R}
 };
+
+
+public:
+   Hardware(/* args */);
+   ~Hardware();
+};
+
+Hardware::Hardware(/* args */)
+{
+}
+
+Hardware::~Hardware()
+{
+}
+
+int setup_chip()
+{
+}
 
 int free_stuff(int h)
 {
@@ -22,3 +45,4 @@ int free_stuff(int h)
 
    return LG_OKAY;
 }
+#endif

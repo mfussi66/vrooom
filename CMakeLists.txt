@@ -1,19 +1,20 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21)
 
-project(rover C)
+project(rover)
 
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+option(USE_LGPIO "Use LGpio instead of mocking" OFF)
 
 add_executable(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        src/main.c
-        src/rover.c
-        src/motor.c
-        src/control.c
-        src/hardware.c
+        src/main.cpp
+        src/Rover.cpp
+        src/Motor.cpp
+        src/control.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -22,9 +23,23 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Find and link the lgpio library
-find_library(LGPIO_LIBRARY lgpio)
-if(NOT LGPIO_LIBRARY)
-    message(FATAL_ERROR "lgpio library not found")
+if(USE_LGPIO)
+    find_library(LGPIO_LIBRARY lgpio)
+    if(NOT LGPIO_LIBRARY)
+        message(FATAL_ERROR "lgpio library not found")
+    endif()
+
+    target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/hw
+    )
+    
+    taget_sources(${PROJECT_NAME} PRIVATE src/hw/Hardware.cpp)
+
+else()
+    target_sources(${PROJECT_NAME}
+    PRIVATE
+    src/mockHardware.cpp)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LGPIO_LIBRARY})
