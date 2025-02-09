@@ -1,38 +1,31 @@
 #include <Motor.h>
+#include <globals.h>
+
 #include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
 #include <memory>
-Motor::Motor(std::shared_ptr<GPIOInterface> gpio) : 
-m_gpio(std::move(gpio))
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono_literals;
+
+Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : id_(id),
+                                                            m_gpio(std::move(gpio))
 {
 }
 
-
-int Motor::setup(int id, gpioGroup* gpio)
+int Motor::setup()
 {
-   id_ = id;
-   //m->io = *gpio;
-
    m_gpio->claim_output();
    m_gpio->claim_input();
-
-   // res = lgGroupClaimOutput(h, 0, 3, m->io.outputs, 0);
-   // res = lgGpioClaimInput(h, LG_SET_PULL_UP, m->io.inputs[0]);
-
-   // m->encoder = 0;
-   // m->pwm = 0;
-   // m->direction = 1;
-
    return 0;
 }
 
 void Motor::read_encoder()
 {
-   //int v = lgGpioRead(m->chip_handle, m->io.inputs[0]);
-   
-   // m->encoder += m->direction * abs(v - m->encoder_pulse_prev);
-
-   // m->encoder_pulse_prev = v;
+   int v = m_gpio->read_pin(0);
+   encoder_ += direction_sign_ * abs(v - encoderPrev_);
+   encoderPrev_ = v;
 }
 
 void Motor::estimate_speed(int window, double Ts)
@@ -47,30 +40,28 @@ void Motor::estimate_speed(int window, double Ts)
    //  }
 }
 
-int Motor::run(Direction cmd, int pwmSet)
+int Motor::run()
 {
-   // int r = LG_OKAY;
+   while (!should_stop.test())
+   {
+      read_encoder();
 
-   // r = lgGpioWrite(m->chip_handle, m->io.outputs[0], cmd & 1);
-   // r = lgGpioWrite(m->chip_handle, m->io.outputs[1], cmd >> 1);
-    
-   // if (r != LG_OKAY) 
-   // {
-   //    printf("Could not set direction!\n");
-   //    return r;
-   // }
+      m_gpio->set_pwm(pwm_);
+      direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
 
-   // m->direction = (cmd == MOTOR_FORWARD) - (cmd == MOTOR_BACKWARDS);
-
-   // r = lgTxPwm(m->chip_handle, m->io.outputs[2], PWM_FREQ, pwm_set, 0, 0);
-
-   // m->pwm = pwm_set;
+      std::cout << "motor " << id_ << " pwm " << pwm_ << std::endl;
+      std::this_thread::sleep_for(20ms);
+   }
 
    return 0;
 }
 
-void Motor::stop()
+void Motor::set_input(int pwm)
 {
-   // Motor::run(MOTOR_STOP, 0);
+   pwm_ = pwm;
 }
 
+void Motor::stop()
+{
+   set_input(0);
+}

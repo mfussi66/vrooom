@@ -1,5 +1,6 @@
-#ifdef USE_LGPIO
-    #include <lgpio.h>
+#pragma once
+
+#include <lgpio.h>
 
 #include <Hardware.h>
 #include "GPIOInterface.h"
@@ -32,6 +33,9 @@ Hardware::~Hardware()
 
 int setup_chip()
 {
+      // r = lgGpioWrite(m->chip_handle, m->io.outputs[0], cmd & 1);
+      // r = lgGpioWrite(m->chip_handle, m->io.outputs[1], cmd >> 1);
+   // r = lgTxPwm(m->chip_handle, m->io.outputs[2], PWM_FREQ, pwm_set, 0, 0);
 }
 
 int free_stuff(int h)
@@ -45,4 +49,3 @@ int free_stuff(int h)
 
    return LG_OKAY;
 }
-#endif

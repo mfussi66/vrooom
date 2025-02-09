@@ -1,54 +1,52 @@
-//#include <motor.h>
+#include <Motor.h>
 #include <Rover.h>
 #include <control.h>
 #include "mockHardware.h"
 
 #include <iostream>
 #include <memory>
+#include <thread>
 
-Rover::Rover(std::shared_ptr<GPIOInterface> gpio) : m_gpio(std::move(gpio))
+Rover::Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r)
 {
+
+    left_wheel_th = std::make_unique<Motor>(0, std::move(gpio_l));
+    right_wheel_th = std::make_unique<Motor>(1, std::move(gpio_r));
 }
 
 Rover::~Rover()
 {
 }
 
-int Rover::setup()
+void Rover::run()
 {
-    left_wheel_th = std::make_unique<Motor>(std::move(m_gpio));
-    right_wheel_th = std::make_unique<Motor>(std::move(m_gpio));
+    left_wheel_th->setup();
+    right_wheel_th->setup();
 
-    return 0;
+    std::thread tml(&Motor::run, left_wheel_th.get());
+    std::thread tmr(&Motor::run, right_wheel_th.get());
+
+    set_motor_inputs();
+
+    tml.join();
+    tmr.join();
 }
 
-void Rover::run(int pwm_set_left, int pwm_set_right, unsigned int direction)
+void Rover::set_motor_inputs()
 {
-    // if (direction != ROVER_FORWARD &&
-    //     direction != ROVER_BACKWARDS &&
-    //     direction != ROVER_LEFT &&
-    //     direction != ROVER_RIGHT &&
-    //     direction != ROVER_STOP)
-    // {
-    //     stop();
-    //     return;
-    // }
-
-    // motor_run(&motor_left, direction & 0b11, pwm_set_left);
-    // motor_run(&motor_right, (direction >> 2), pwm_set_right);
+    left_wheel_th->set_input(20);
+    right_wheel_th->set_input(-20);
 }
 
 void Rover::stop()
 {
-    // motor_stop(&motor_left);
-    // motor_stop(&motor_right);
-    motion_state = 0;
+    left_wheel_th->stop();
+    right_wheel_th->stop();
 }
 
 void Rover::close()
 {
     stop();
-    //free_stuff(chip_handle);
 }
 
 void Rover::read_encoders()

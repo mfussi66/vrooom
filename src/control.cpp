@@ -31,6 +31,7 @@ double integrator_step(Integrator *itg, double x)
 {
      itg->x += x;
      itg->x *= (itg->ki / itg->Ts); 
+     return 0;
 }
 
 double pid_step(PID* pid, double r, double y)

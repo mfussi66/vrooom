@@ -1,12 +1,6 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
-#ifdef USE_LGPIO
-
-#include <lgpio.h>
-
-#endif
-
 #define M_ENCODER_R 19
 #define M_IN1_R 17
 #define M_IN2_R 27
@@ -19,4 +13,3 @@
 
 int free_stuff(int h);
 //virtual int setup_chip() = 0;
-#endif
