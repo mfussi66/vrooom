@@ -6,6 +6,9 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 Rover::Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r)
 {
@@ -18,21 +21,31 @@ Rover::~Rover()
 {
 }
 
-void Rover::run()
+void Rover::start()
 {
     left_wheel_th->setup();
     right_wheel_th->setup();
 
     std::thread tml(&Motor::run, left_wheel_th.get());
     std::thread tmr(&Motor::run, right_wheel_th.get());
+    std::thread rr(&Rover::run, this);
+    
+    set_inputs();
 
-    set_motor_inputs();
-
+    rr.join();
     tml.join();
     tmr.join();
 }
 
-void Rover::set_motor_inputs()
+void Rover::run()
+{
+    while(!should_stop.test())
+    {
+        std::this_thread::sleep_for(200ms);
+    }
+}
+
+void Rover::set_inputs()
 {
     left_wheel_th->set_input(20);
     right_wheel_th->set_input(-20);

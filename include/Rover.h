@@ -22,18 +22,7 @@ private:
 
    std::unique_ptr<Motor> left_wheel_th;
    std::unique_ptr<Motor> right_wheel_th;
-
-public:
-   Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
-   ~Rover();
-
    void run();
-
-   void set_motor_inputs();
-
-   void stop();
-
-   void close();
 
    void read_encoders();
 
@@ -44,4 +33,16 @@ public:
    void get_wheels_speeds(double *vl, double *vr);
 
    void run_speed_ctrl(double l_ref, double r_ref);
+
+public:
+   Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
+   ~Rover();
+
+   void start();
+
+   void set_inputs();
+
+   void stop();
+
+   void close();
 };

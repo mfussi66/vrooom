@@ -49,7 +49,7 @@ int Motor::run()
       m_gpio->set_pwm(pwm_);
       direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
 
-      std::cout << "motor " << id_ << " pwm " << pwm_ << std::endl;
+      std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;
       std::this_thread::sleep_for(20ms);
    }
 

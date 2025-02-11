@@ -1,6 +1,6 @@
 #include "mockHardware.h"
 #include <iostream>
-
+#include <format>
 mockHardware::mockHardware()
 {
 }
@@ -21,9 +21,10 @@ int mockHardware::claim_output()
     return 0;
 }
 
-int mockHardware::read_pin(u_int8_t pin)
+int mockHardware::read_pin(uint8_t pin)
 {
-    std::cout << "claimed input" << std::endl;
+   ;
+    std::cout << "read pin " << std::format("{:d}", pin) << std::endl;
     return 0;
 }
 

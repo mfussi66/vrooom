@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
    // instantiate rover and run
    Rover rover(std::move(mock_left), std::move(mock_right));
 
-   rover.run();
+   rover.start();
    
    printf("Quitting...\n");
 
