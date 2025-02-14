@@ -30,8 +30,6 @@ void Rover::start()
     std::thread tmr(&Motor::run, right_wheel_th.get());
     std::thread rr(&Rover::run, this);
     
-    set_inputs();
-
     rr.join();
     tml.join();
     tmr.join();
@@ -41,14 +39,14 @@ void Rover::run()
 {
     while(!should_stop.test())
     {
+        run_speed_ctrl();
         std::this_thread::sleep_for(200ms);
     }
 }
 
 void Rover::set_inputs()
 {
-    left_wheel_th->set_input(20);
-    right_wheel_th->set_input(-20);
+
 }
 
 void Rover::stop()
@@ -59,6 +57,7 @@ void Rover::stop()
 
 void Rover::close()
 {
+    std::cout << "Closing rover..." <<std::endl;
     stop();
 }
 
@@ -86,8 +85,21 @@ void Rover::get_wheels_speeds(double *vl, double *vr)
     // *vr = motor_right.speed;
 }
 
-void Rover::run_speed_ctrl(double l_ref, double r_ref)
+void Rover::set_twist_references(double v, double w)
 {
+    vref_ = v;
+    wref_ = w;
+}
+
+void Rover::run_speed_ctrl()
+{
+    double R = 0.03; // cm
+    double wl = vref_/R/2 - wref_/2;
+    double wr = vref_/R/2 + wref_/2;
+
+    left_wheel_th->set_input(wl);
+    right_wheel_th->set_input(wr);
+
     // double y[2];
     // double r[2] = {l_ref, r_ref};
     // double u[2];

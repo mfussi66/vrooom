@@ -19,7 +19,8 @@ class Rover
 private:
    double l_old = 0;
    double r_old = 0;
-
+   double wref_ = 0;
+   double vref_ = 0;
    std::unique_ptr<Motor> left_wheel_th;
    std::unique_ptr<Motor> right_wheel_th;
    void run();
@@ -32,7 +33,9 @@ private:
 
    void get_wheels_speeds(double *vl, double *vr);
 
-   void run_speed_ctrl(double l_ref, double r_ref);
+   void run_speed_ctrl();
+
+   void set_inputs();
 
 public:
    Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
@@ -40,7 +43,7 @@ public:
 
    void start();
 
-   void set_inputs();
+   void set_twist_references(double v, double w);
 
    void stop();
 

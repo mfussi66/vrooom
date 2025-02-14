@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
    // instantiate rover and run
    Rover rover(std::move(mock_left), std::move(mock_right));
 
+   rover.set_twist_references(1, 2);
+
    rover.start();
    
    printf("Quitting...\n");

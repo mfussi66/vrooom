@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(USE_LGPIO "Use LGpio instead of mocking" OFF)
 
+find_package(lcm REQUIRED)
+include(${LCM_USE_FILE})
+
 add_executable(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME}
@@ -14,6 +17,8 @@ target_sources(${PROJECT_NAME}
         src/main.cpp
         src/Rover.cpp
         src/Motor.cpp
+        src/Comms.cpp
+        src/mockHardware.cpp
         src/control.cpp
 )
 
@@ -33,13 +38,7 @@ if(USE_LGPIO)
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include/hw
     )
-    
     taget_sources(${PROJECT_NAME} PRIVATE src/hw/Hardware.cpp)
-
-else()
-    target_sources(${PROJECT_NAME}
-    PRIVATE
-    src/mockHardware.cpp)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LGPIO_LIBRARY})
