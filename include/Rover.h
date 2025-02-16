@@ -1,6 +1,7 @@
 #pragma once
 #include "GPIOInterface.h"
-#include "Motor.h"
+#include <Motor.h>
+#include <Comms.h>
 
 #include <thread>
 
@@ -17,12 +18,11 @@
 class Rover
 {
 private:
-   double l_old = 0;
-   double r_old = 0;
-   double wref_ = 0;
-   double vref_ = 0;
-   std::unique_ptr<Motor> left_wheel_th;
-   std::unique_ptr<Motor> right_wheel_th;
+
+   std::unique_ptr<Motor> left_wheel;
+   std::unique_ptr<Motor> right_wheel;
+   std::unique_ptr<Comms> communicator;
+
    void run();
 
    void read_encoders();
@@ -35,15 +35,15 @@ private:
 
    void run_speed_ctrl();
 
-   void set_inputs();
+   void compute_odometry(double wl, double wr);
 
 public:
    Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
    ~Rover();
 
-   void start();
+   static constexpr double R = 0.03; // cm
 
-   void set_twist_references(double v, double w);
+   void start();
 
    void stop();
 

@@ -19,16 +19,12 @@ int main(int argc, char *argv[])
 
    should_stop.clear();
 
-   bool use_sim = false;
+   bool use_sim = true;
 
-   // set up mocked hardware
    auto mock_left = std::make_unique<mockHardware>();
    auto mock_right = std::make_unique<mockHardware>();
 
-   // instantiate rover and run
    Rover rover(std::move(mock_left), std::move(mock_right));
-
-   rover.set_twist_references(1, 2);
 
    rover.start();
    

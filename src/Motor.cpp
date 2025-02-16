@@ -9,8 +9,10 @@
 
 using namespace std::chrono_literals;
 
-Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : id_(id),
-                                                            m_gpio(std::move(gpio))
+constexpr double kv = 1; // V/rpm
+
+Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : m_gpio(std::move(gpio)),
+                                                            id_(id)
 {
 }
 
@@ -46,7 +48,7 @@ int Motor::run()
    {
       read_encoder();
 
-      m_gpio->set_pwm(pwm_);
+      m_gpio->set_pwm(pwm_ * kv);
       direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
 
       std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;

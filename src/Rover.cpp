@@ -7,14 +7,16 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+#include <mutex>
 
 using namespace std::chrono_literals;
 
 Rover::Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r)
 {
 
-    left_wheel_th = std::make_unique<Motor>(0, std::move(gpio_l));
-    right_wheel_th = std::make_unique<Motor>(1, std::move(gpio_r));
+    left_wheel = std::make_unique<Motor>(0, std::move(gpio_l));
+    right_wheel = std::make_unique<Motor>(1, std::move(gpio_r));
+    communicator = std::make_unique<Comms>("inputs.twist_refs");
 }
 
 Rover::~Rover()
@@ -23,11 +25,11 @@ Rover::~Rover()
 
 void Rover::start()
 {
-    left_wheel_th->setup();
-    right_wheel_th->setup();
+    left_wheel->setup();
+    right_wheel->setup();
 
-    std::thread tml(&Motor::run, left_wheel_th.get());
-    std::thread tmr(&Motor::run, right_wheel_th.get());
+    std::thread tml(&Motor::run, left_wheel.get());
+    std::thread tmr(&Motor::run, right_wheel.get());
     std::thread rr(&Rover::run, this);
     
     rr.join();
@@ -44,15 +46,10 @@ void Rover::run()
     }
 }
 
-void Rover::set_inputs()
-{
-
-}
-
 void Rover::stop()
 {
-    left_wheel_th->stop();
-    right_wheel_th->stop();
+    left_wheel->stop();
+    right_wheel->stop();
 }
 
 void Rover::close()
@@ -85,20 +82,23 @@ void Rover::get_wheels_speeds(double *vl, double *vr)
     // *vr = motor_right.speed;
 }
 
-void Rover::set_twist_references(double v, double w)
+void Rover::compute_odometry(double wl, double wr)
 {
-    vref_ = v;
-    wref_ = w;
+    double V = (wr + wl) / 2 * R;
+    double W = (wr - wl);
 }
 
 void Rover::run_speed_ctrl()
 {
-    double R = 0.03; // cm
-    double wl = vref_/R/2 - wref_/2;
-    double wr = vref_/R/2 + wref_/2;
+    auto refs = communicator->get_twist_references();
 
-    left_wheel_th->set_input(wl);
-    right_wheel_th->set_input(wr);
+    compute_odometry(1.0, 1.0);
+
+    double wl = refs.first / R / 2 - refs.second / 2;
+    double wr = refs.first / R / 2 + refs.second / 2;
+
+    left_wheel->set_input(wl);
+    right_wheel->set_input(wr);
 
     // double y[2];
     // double r[2] = {l_ref, r_ref};
