@@ -8,7 +8,6 @@
 class Comms
 {
 private:
-  std::unique_ptr<lcm::LCM> lcm_ptr;
   void handleMessage(const lcm::ReceiveBuffer *rbuf, const std::string &chan,
                        const rovertypes::twist_t *msg);
   lcm::Subscription* ref_sub;
@@ -17,6 +16,9 @@ private:
   double wref_ = 0;
 
 public:
+
+  std::unique_ptr<lcm::LCM> lcm_ptr;
+
   Comms(const std::string& channel_name);
 
   inline std::pair<double, double> get_twist_references()

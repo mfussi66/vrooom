@@ -22,16 +22,15 @@ void Comms::handleMessage(const lcm::ReceiveBuffer* rbuf,
 {
     wref_ = msg->w;
     vref_ = msg->v;
-    std::cout << "msg at " << msg->timestamp << std::endl;
 
-    // msg->timestamp = std::chrono::high_resolution_clock::now().time_since_epoch();
+    std::cout << vref_ << " " <<  wref_ << std::endl;
 }
 
 void Comms::publishCommands(double pwm_l,
                             double pwm_r)
 {
   rovertypes::motor_commands_t c {.pwm = {pwm_l, pwm_r}};
-  lcm_ptr->publish("outputs.pwm", &c);
+  lcm_ptr->publish("rover.pwm.set", &c);
 }
 
 Comms::~Comms()

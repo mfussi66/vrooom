@@ -51,8 +51,8 @@ int Motor::run()
       m_gpio->set_pwm(pwm_ * kv);
       direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
 
-      std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;
-      std::this_thread::sleep_for(20ms);
+     // std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;
+      std::this_thread::sleep_for(10ms);
    }
 
    return 0;

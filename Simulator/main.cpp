@@ -14,20 +14,27 @@ void signalHandler(int s)
     stop = true;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
     signal(SIGINT, signalHandler);
 
     lcm::LCM lcm;
 
-    if(!lcm.good()) return 1;
+    if (!lcm.good())
+        return 1;
 
-    rovertypes::twist_t tw = {.timestamp = 100, .v = 3, .w = 2.5};
+    rovertypes::twist_t tw = {
+        .timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch()
+        ).count(), 
+        .v = 3, 
+        .w = 2.5
+    };
 
-    while(!stop)
+    while (!stop)
     {
-        lcm.publish("inputs.twist_refs", &tw);
+        lcm.publish("/twist", &tw);
         std::this_thread::sleep_for(100ms);
         std::cout << "pub" << std::endl;
     }

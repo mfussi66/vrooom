@@ -37,4 +37,5 @@ lcm_install_headers(DESTINATION include
 )
 
 add_subdirectory(Rover)
+add_subdirectory(JoypadControl)
 add_subdirectory(Simulator)
