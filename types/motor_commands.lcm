@@ -1,0 +1,6 @@
+package rovertypes;
+
+struct motor_commands_t
+{
+    double pwm[2];
+}
