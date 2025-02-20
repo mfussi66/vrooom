@@ -25,14 +25,6 @@ private:
 
    void run();
 
-   void read_encoders();
-
-   void get_wheels_angles(double *left, double *right);
-
-   void estimate_wheels_speeds();
-
-   void get_wheels_speeds(double *vl, double *vr);
-
    void run_speed_ctrl();
 
    void compute_odometry(double wl, double wr);

@@ -2,5 +2,6 @@ package rovertypes;
 
 struct motor_commands_t
 {
+    int64_t timestamp;
     double pwm[2];
 }
