@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+
 typedef struct 
 {
     int inputs[1];

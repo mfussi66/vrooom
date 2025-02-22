@@ -1,6 +1,8 @@
 #pragma once
+
 #include "GPIOInterface.h"
 #include <cstdint>
+
 class mockHardware : public GPIOInterface
 {
 private:

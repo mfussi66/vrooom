@@ -1,10 +1,9 @@
+#include <lcm/lcm-cpp.hpp>
+#include <rovertypes/twist_t.hpp>
 
 #include <iostream>
 #include <csignal>
 #include <thread>
-
-#include <lcm/lcm-cpp.hpp>
-#include <rovertypes/twist_t.hpp>
 
 using namespace std::chrono_literals;
 
