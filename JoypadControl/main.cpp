@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
             std::chrono::high_resolution_clock::now().time_since_epoch()
         ).count();
 
-        rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL | LIBEVDEV_READ_FLAG_BLOCKING, &ev);
+        if(libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL | LIBEVDEV_READ_FLAG_BLOCKING, &ev) < 0){ continue; }
         
          if (ev.type == EV_ABS) {
 

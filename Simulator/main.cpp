@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     while (!stop)
     {
         lcm.publish("/twist", &tw);
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(30ms);
         std::cout << "pub" << std::endl;
     }
     return 0;
