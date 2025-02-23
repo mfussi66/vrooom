@@ -8,7 +8,6 @@
 
 class Motor {
  public:
-  static constexpr double PWM_FREQ = 1000;
   static constexpr double ENCODER_RESOLUTION = 1986.0;
 
   Motor(int id, std::unique_ptr<GPIOInterface> gpio);
@@ -33,4 +32,5 @@ class Motor {
   int pwm_ = 0;
   double direction_sign_ = 0;
   gpioGroup io_;
+  
 };

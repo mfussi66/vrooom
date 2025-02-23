@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.21)
 
 project(rover)
 
@@ -36,7 +36,7 @@ if(USE_LGPIO)
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}hw
     )
-    taget_sources(${PROJECT_NAME} PRIVATE hw/Hardware.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE hw/Hardware.cpp)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE  ${LGPIO_LIBRARY} my_lcmtypes-cpp ${LCM_NAMESPACE}lcm)

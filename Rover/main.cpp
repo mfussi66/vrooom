@@ -1,6 +1,7 @@
 #include <Rover.h>
 #include <globals.h>
 #include <mockHardware.h>
+#include <Hardware.h>
 
 #include <iostream>
 #include <csignal>
@@ -21,10 +22,18 @@ int main(int argc, char *argv[])
 
    bool use_sim = true;
 
-   auto mock_left = std::make_unique<mockHardware>();
-   auto mock_right = std::make_unique<mockHardware>();
-
-   Rover rover(std::move(mock_left), std::move(mock_right));
-
-   return rover.start();
+   if (use_sim)
+   {
+      auto left = std::make_unique<mockHardware>();
+      auto right = std::make_unique<mockHardware>();
+      Rover rover(std::move(left), std::move(right));
+      return rover.start();
+   }
+   else
+   {
+      auto left = std::make_unique<Hardware>(motor_left_io);
+      auto right = std::make_unique<Hardware>(motor_right_io);
+      Rover rover(std::move(left), std::move(right));
+      return rover.start();
+   }
 }

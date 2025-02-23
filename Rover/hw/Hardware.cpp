@@ -5,55 +5,38 @@
 #include <Hardware.h>
 #include "GPIOInterface.h"
 
-class Hardware : public GPIOInterface
-{
-private:
-   gpioGroup motor_left_io = {
-   {M_ENCODER_L}, 
-   {M_IN1_L, M_IN2_L, M_EN_L}
-};
-gpioGroup motor_right_io = {
-   {M_ENCODER_R}, 
-   {M_IN1_R, M_IN2_R, M_EN_R}
-};
-
-
-public:
-   Hardware(/* args */);
-   ~Hardware();
-};
-
-Hardware::Hardware(/* args */)
-{
-   setup_chip
-}
+Hardware::Hardware(gpioGroup gpio)
+: m_gpio(gpio)
+{}
 
 Hardware::~Hardware()
 {
 }
 
-static int Hardware::setup_chip()
+int Hardware::setup_chip()
 {
 
    static bool is_setup = false;
 
-   // if(!is_setup)
-   // lgpioSetup
-   // is_setup = true;
-      // r = lgGpioWrite(m->chip_handle, m->io.outputs[0], cmd & 1);
-      // r = lgGpioWrite(m->chip_handle, m->io.outputs[1], cmd >> 1);
-      // r = lgTxPwm(m->chip_handle, m->io.outputs[2], PWM_FREQ, pwm_set, 0, 0);
+   if(!is_setup)
+   {
+        handle = lgGpiochipOpen(0);
+        is_setup = true;
+   }
+   // 
+
 }
 
-int Hardware::claim_input()
+int Hardware::claim_input(uint8_t pin)
 {
-    // std::cout << "claimed input" << std::endl;
+    int res = 0;
+    res = lgGpioClaimInput(handle, LG_SET_PULL_UP, m_gpio.inputs[0]);
     return 0;
 }
 
-int Hardware::claim_output()
+int Hardware::claim_outputs(const int* pin, int size)
 {
-    // std::cout << "claimed output" << std::endl;
+    lgGroupClaimOutput(handle, 0, 3, m_gpio.outputs, 0);
     return 0;
 }
 
@@ -65,7 +48,7 @@ int Hardware::read_pin(uint8_t pin)
 
 int Hardware::write_pin(uint8_t pin, int value)
 {
-    //std::cout << "wp " << pin << ": " << value << std::endl;
+    lgGpioWrite(handle, pin, value);
     return 0;
 }
 
@@ -86,6 +69,8 @@ int Hardware::set_pwm(int pwm)
         write_pin(0, static_cast<uint8_t>(Direction::Stop) & 1);
         write_pin(0, static_cast<uint8_t>(Direction::Stop) >> 1);   
     }
+
+    lgTxPwm(handle, m->io.outputs[2], PWM_FREQ, pwm, 0, 0);
 
    // std::cout << "pwm set " << pwm << std::endl;
     return 0;
