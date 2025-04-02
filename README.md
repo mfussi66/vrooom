@@ -3,6 +3,11 @@ A motion controller for the VIAM Rover V1 written in C++.
 
 This program is intended to run on a Raspberry Pi.
 
+
+### Demo
+
+![](assets/rover.mp4)
+
 ### Dependencies
 - `lcm` for interprocess-communication (locally or between machines)
 - `lgpio` for controlling the Pi pins.
