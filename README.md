@@ -6,7 +6,8 @@ This program is intended to run on a Raspberry Pi.
 
 ### Demo
 
-![](assets/rover.mp4)
+
+https://github.com/user-attachments/assets/805820c6-bf3b-44b4-9f49-7b28ad689da9
 
 ### Dependencies
 - `lcm` for interprocess-communication (locally or between machines)
