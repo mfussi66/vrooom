@@ -23,7 +23,7 @@ public:
 
   inline std::pair<double, double> get_twist_references()
   {
-    return std::make_pair(vref_, wref_);
+    return std::pair<double, double>(vref_, wref_);
   }
 
   void publishCommands(double pwm_l, double pwm_r);

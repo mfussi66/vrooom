@@ -1,5 +1,3 @@
-#pragma once
-
 #include <lgpio.h>
 
 #include <Hardware.h>
@@ -17,7 +15,7 @@ int Hardware::setup(const gpioGroup& gpio) {
     
     int r = setup_chip();
 
-    claim_input(gpio.inputs.data());
+    claim_input(gpio.inputs[0]);
     claim_outputs(gpio.outputs.data(), gpio.outputs.size());
 
     return 0; 
@@ -34,8 +32,7 @@ int Hardware::setup_chip()
         handle = lgGpiochipOpen(0);
         is_setup = true;
    }
-   // 
-
+   return 0; 
 }
 
 int Hardware::claim_input(uint8_t pin)
@@ -47,7 +44,7 @@ int Hardware::claim_input(uint8_t pin)
 
 int Hardware::claim_outputs(const int* pin, int size)
 {
-    lgGroupClaimOutput(handle, 0, 3, m_gpio.outputs, 0);
+    lgGroupClaimOutput(handle, 0, m_gpio.outputs.size(), m_gpio.outputs.data(), 0);
     return 0;
 }
 
@@ -81,7 +78,7 @@ int Hardware::set_pwm(int pwm)
         write_pin(0, static_cast<uint8_t>(Direction::Stop) >> 1);   
     }
 
-    lgTxPwm(handle, m->io.outputs[2], PWM_FREQ, pwm, 0, 0);
+    lgTxPwm(handle, m_gpio.outputs[2], PWM_FREQ, pwm, 0, 0);
 
    // std::cout << "pwm set " << pwm << std::endl;
     return 0;

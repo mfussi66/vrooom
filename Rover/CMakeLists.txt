@@ -34,9 +34,14 @@ if(USE_LGPIO)
 
     target_include_directories(${PROJECT_NAME}
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}hw
+        ${CMAKE_CURRENT_SOURCE_DIR}/hw
     )
     target_sources(${PROJECT_NAME} PRIVATE hw/Hardware.cpp)
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE USE_LGPIO=1)
+
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE USE_LGPIO=0)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE  ${LGPIO_LIBRARY} my_lcmtypes-cpp ${LCM_NAMESPACE}lcm)

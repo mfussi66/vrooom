@@ -2,8 +2,8 @@
 #include <globals.h>
 #include <mockHardware.h>
 
-#if USE_LGPIO==1
-#include <Hardware.h>
+#if USE_LGPIO
+   #include <Hardware.h> 
 #endif
 
 #include <iostream>
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
    should_stop.clear();
 
-   bool use_sim = true;
+   constexpr bool use_sim = true;
 
    if (use_sim)
    {
@@ -35,6 +35,17 @@ int main(int argc, char *argv[])
    #if USE_LGPIO==1
    else
    {
+
+      gpioGroup motor_left_io = {
+         {M_ENCODER_L}, 
+         {M_IN1_L, M_IN2_L, M_EN_L}
+     };
+     gpioGroup motor_right_io = {
+         {M_ENCODER_R}, 
+         {M_IN1_R, M_IN2_R, M_EN_R}
+     };
+   
+
       auto left = std::make_unique<Hardware>(motor_left_io);
       auto right = std::make_unique<Hardware>(motor_right_io);
       Rover rover(std::move(left), std::move(right));
