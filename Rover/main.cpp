@@ -1,7 +1,10 @@
 #include <Rover.h>
 #include <globals.h>
 #include <mockHardware.h>
+
+#if USE_LGPIO==1
 #include <Hardware.h>
+#endif
 
 #include <iostream>
 #include <csignal>
@@ -29,6 +32,7 @@ int main(int argc, char *argv[])
       Rover rover(std::move(left), std::move(right));
       return rover.start();
    }
+   #if USE_LGPIO==1
    else
    {
       auto left = std::make_unique<Hardware>(motor_left_io);
@@ -36,4 +40,5 @@ int main(int argc, char *argv[])
       Rover rover(std::move(left), std::move(right));
       return rover.start();
    }
+   #endif
 }

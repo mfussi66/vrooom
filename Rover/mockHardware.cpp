@@ -9,17 +9,7 @@ mockHardware::~mockHardware()
 {
 }
 
-int mockHardware::claim_input()
-{
-    // std::cout << "claimed input" << std::endl;
-    return 0;
-}
-
-int mockHardware::claim_output()
-{
-    // std::cout << "claimed output" << std::endl;
-    return 0;
-}
+int mockHardware::setup() { return 0; }
 
 int mockHardware::read_pin(uint8_t pin)
 {

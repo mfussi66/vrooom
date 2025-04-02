@@ -18,8 +18,7 @@ Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : m_gpio(std::move(gpi
 
 int Motor::setup()
 {
-   m_gpio->claim_output();
-   m_gpio->claim_input();
+   m_gpio->setup();
    return 0;
 }
 

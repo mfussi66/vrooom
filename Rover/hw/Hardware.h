@@ -26,8 +26,9 @@ public:
     Hardware(gpioGroup gpio);
     ~Hardware();
 
-    int claim_input(uint8_t pin) override;
-    int claim_outputs(const int* pin, int size) override;
+    int setup(const gpioGroup& gpio) override;
+    // int claim_input(uint8_t pin) override;
+    // int claim_outputs(const int* pin, int size) override;
     int read_pin(uint8_t pin) override;
     int write_pin(uint8_t pin, int value) override;
     int set_pwm(int pwm) override;

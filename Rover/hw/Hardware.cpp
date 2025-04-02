@@ -13,6 +13,17 @@ Hardware::~Hardware()
 {
 }
 
+int Hardware::setup(const gpioGroup& gpio) { 
+    
+    int r = setup_chip();
+
+    claim_input(gpio.inputs.data());
+    claim_outputs(gpio.outputs.data(), gpio.outputs.size());
+
+    return 0; 
+
+}
+
 int Hardware::setup_chip()
 {
 
