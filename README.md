@@ -50,5 +50,5 @@ Use `--sim` if you want ro just emulate the hardware, `--rover` if you are on th
 To launch the JoypadControl module, run
 
 ```
-./JoypadControl/joypad-control-rover [--sim or --rover]
+./JoypadControl/joypad-control-rover
 ```
