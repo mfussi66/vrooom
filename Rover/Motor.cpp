@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <memory>
-#include <chrono>
 #include <thread>
 
 using namespace std::chrono_literals;
@@ -46,9 +45,11 @@ int Motor::run()
    {
       //read_encoder();
 
+      mtx_pwm_.lock();
       m_gpio->set_pwm(pwm_ * kv);
       direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
-
+      mtx_pwm_.unlock();
+      
      // std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;
       std::this_thread::sleep_for(10ms);
    }
@@ -58,7 +59,9 @@ int Motor::run()
 
 void Motor::set_input(int pwm)
 {
+   mtx_pwm_.lock();
    pwm_ = pwm;
+   mtx_pwm_.unlock();
 }
 
 void Motor::stop()

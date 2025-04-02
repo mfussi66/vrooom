@@ -25,22 +25,5 @@ int mockHardware::write_pin(uint8_t pin, int value)
 
 int mockHardware::set_pwm(int pwm)
 {
-    if(pwm > 0) 
-    {
-        write_pin(0, static_cast<uint8_t>(Direction::Forward) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Forward) >> 1);
-    }
-    else if(pwm < 0)
-    {
-        write_pin(0, static_cast<uint8_t>(Direction::Backwards) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Backwards) >> 1);
-    }
-    else
-    {
-        write_pin(0, static_cast<uint8_t>(Direction::Stop) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Stop) >> 1);   
-    }
-
-   // std::cout << "pwm set " << pwm << std::endl;
     return 0;
 }

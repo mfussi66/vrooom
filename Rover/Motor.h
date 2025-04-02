@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <memory>
+#include <mutex>
 
 #include "GPIOInterface.h"
 #include "globals.h"
@@ -32,5 +33,6 @@ class Motor {
   int pwm_ = 0;
   double direction_sign_ = 0;
   gpioGroup io_;
+  std::mutex mtx_pwm_;
   
 };
