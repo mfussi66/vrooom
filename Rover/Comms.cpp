@@ -16,6 +16,9 @@ Comms::Comms(const std::string &channel_name)
 
   ref_sub = lcm_ptr->subscribe(channel_name, &Comms::handleMessage, this);
   ref_sub->setQueueCapacity(10);
+
+  std::cout << "Reading inputs from " << channel_name << std::endl;
+
 }
 
 void Comms::handleMessage(const lcm::ReceiveBuffer *rbuf,
@@ -25,7 +28,7 @@ void Comms::handleMessage(const lcm::ReceiveBuffer *rbuf,
   wref_ = msg->w;
   vref_ = msg->v;
 
-  std::cout << vref_ << " " << wref_ << std::endl;
+  //std::cout << vref_ << " " << wref_ << std::endl;
 }
 
 void Comms::publishCommands(double pwm_l,

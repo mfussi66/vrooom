@@ -25,8 +25,16 @@ Rover::~Rover()
 
 int Rover::start()
 {
-    left_wheel->setup();
-    right_wheel->setup();
+	int r = 0;
+
+    r = left_wheel->setup();
+    r = right_wheel->setup();
+
+	if (r < 0)
+	{
+		std::cerr << "Could not set up motors!" << std::endl;
+		return -1;
+	}
 
     std::thread tml(&Motor::run, left_wheel.get());
     std::thread tmr(&Motor::run, right_wheel.get());
@@ -47,7 +55,7 @@ void Rover::run()
     {
         communicator->lcm_ptr->handleTimeout(5);
         run_speed_ctrl();
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(20ms);
     }
 }
 
@@ -77,6 +85,8 @@ void Rover::run_speed_ctrl()
 
     double wl = refs.first / R / 2 - refs.second / 2;
     double wr = refs.first / R / 2 + refs.second / 2;
+
+    //std::cout << wl << wr << std::endl;
 
     left_wheel->set_input(wl);
     right_wheel->set_input(wr);

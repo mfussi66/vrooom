@@ -33,7 +33,11 @@ int main(int argc, char* argv[])
     int fd;
 
     // Open the joystick device
-    fd = open("/dev/input/event10", O_RDONLY|O_NONBLOCK);
+
+    std::cout << "reading joystick from device /dev/input/event9" << std::endl;
+    std::cout << "sending joystick to /twist.set" << std::endl;
+
+    fd = open("/dev/input/event9", O_RDONLY|O_NONBLOCK);
     if (fd < 0) {
         std::cerr << "Failed to open device\n";
         return 1;
@@ -71,10 +75,10 @@ int main(int argc, char* argv[])
             switch (ev.code)
             {
             case ABS_Y:
-                tw.v = percentage;
+                tw.v = -percentage;
                 break;
             case ABS_RX:
-                tw.w = percentage;
+                tw.w = -percentage;
                 break;
             default:
                 break;

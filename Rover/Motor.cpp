@@ -9,7 +9,7 @@
 
 using namespace std::chrono_literals;
 
-constexpr double kv = 1; // V/rpm
+constexpr double kv = 0.05; // V/rpm
 
 Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : m_gpio(std::move(gpio)),
                                                             id_(id)
@@ -18,8 +18,7 @@ Motor::Motor(int id, std::unique_ptr<GPIOInterface> gpio) : m_gpio(std::move(gpi
 
 int Motor::setup()
 {
-   m_gpio->setup();
-   return 0;
+   return m_gpio->setup();
 }
 
 void Motor::read_encoder()
@@ -45,7 +44,7 @@ int Motor::run()
 {
    while (!should_stop.test())
    {
-      read_encoder();
+      //read_encoder();
 
       m_gpio->set_pwm(pwm_ * kv);
       direction_sign_ = (pwm_ > 0) - (pwm_ < 0);

@@ -23,28 +23,33 @@ int main(int argc, char *argv[])
 
    should_stop.clear();
 
-   constexpr bool use_sim = true;
+   std::string input;
 
-   if (use_sim)
+   if ( (argc <= 1) || (argv[argc-1] == NULL)) {
+      std::cerr << "No argument provided (--sim or --rover)!" << std::endl;
+      return 1;
+   }
+   else {
+      input = argv[argc-1];
+   }
+
+
+
+   bool use_sim = (input == "--sim");
+
+   if (input == "--sim")
    {
+      std::cout << "Using simulation mode" << std::endl;
+
       auto left = std::make_unique<mockHardware>();
       auto right = std::make_unique<mockHardware>();
       Rover rover(std::move(left), std::move(right));
       return rover.start();
    }
    #if USE_LGPIO==1
-   else
+   else if(input == "--rover")
    {
-
-      gpioGroup motor_left_io = {
-         {M_ENCODER_L}, 
-         {M_IN1_L, M_IN2_L, M_EN_L}
-     };
-     gpioGroup motor_right_io = {
-         {M_ENCODER_R}, 
-         {M_IN1_R, M_IN2_R, M_EN_R}
-     };
-   
+      std::cout << "Using Rover mode" << std::endl;
 
       auto left = std::make_unique<Hardware>(motor_left_io);
       auto right = std::make_unique<Hardware>(motor_right_io);
@@ -52,4 +57,9 @@ int main(int argc, char *argv[])
       return rover.start();
    }
    #endif
+   else
+   {
+      std::cerr << "Unsupported mode " << input << std::endl <<
+      "Supported modes are --sim and --rover" << std::endl;
+   }
 }

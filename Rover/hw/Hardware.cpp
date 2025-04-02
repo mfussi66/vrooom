@@ -2,6 +2,17 @@
 
 #include <Hardware.h>
 #include "GPIOInterface.h"
+#include <iostream>
+
+      gpioGroup motor_left_io = {
+         {M_ENCODER_L}, 
+         {M_IN1_L, M_IN2_L, M_EN_L}
+     };
+     gpioGroup motor_right_io = {
+         {M_ENCODER_R}, 
+         {M_IN1_R, M_IN2_R, M_EN_R}
+     };
+   
 
 Hardware::Hardware(gpioGroup gpio)
 : m_gpio(gpio)
@@ -11,47 +22,55 @@ Hardware::~Hardware()
 {
 }
 
-int Hardware::setup(const gpioGroup& gpio) { 
-    
+int Hardware::setup()
+{
     int r = setup_chip();
 
-    claim_input(gpio.inputs[0]);
-    claim_outputs(gpio.outputs.data(), gpio.outputs.size());
+	if(r < 0)
+	{
+		std::cerr << "There was a problem opening chip!" << std::endl;
+		return r;
+	}
+	
+    r = claim_input(m_gpio.inputs[0]);
+    r = claim_outputs(m_gpio.outputs.data(), m_gpio.outputs.size());
 
-    return 0; 
-
+    return r; 
 }
+
 
 int Hardware::setup_chip()
 {
 
    static bool is_setup = false;
 
+   static int h = -1;
+
    if(!is_setup)
    {
-        handle = lgGpiochipOpen(0);
+        h = lgGpiochipOpen(0);
         is_setup = true;
    }
-   return 0; 
+
+   handle = h;
+   
+   return handle; 
 }
 
 int Hardware::claim_input(uint8_t pin)
 {
-    int res = 0;
-    res = lgGpioClaimInput(handle, LG_SET_PULL_UP, m_gpio.inputs[0]);
-    return 0;
+    return lgGpioClaimInput(handle, LG_SET_PULL_UP, m_gpio.inputs[0]);
 }
 
 int Hardware::claim_outputs(const int* pin, int size)
 {
-    lgGroupClaimOutput(handle, 0, m_gpio.outputs.size(), m_gpio.outputs.data(), 0);
-    return 0;
+    return lgGroupClaimOutput(handle, 0, m_gpio.outputs.size(), m_gpio.outputs.data(), 0);
 }
 
 int Hardware::read_pin(uint8_t pin)
 {
-    // std::cout << "read pin " << std::format("{:d}", pin) << std::endl;
-    return 0;
+	int v = lgGpioRead(handle, pin);
+    return v;
 }
 
 int Hardware::write_pin(uint8_t pin, int value)
@@ -64,23 +83,26 @@ int Hardware::set_pwm(int pwm)
 {
     if(pwm > 0) 
     {
-        write_pin(0, static_cast<uint8_t>(Direction::Forward) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Forward) >> 1);
+        write_pin(m_gpio.outputs[0], static_cast<uint8_t>(Direction::Forward) & 1);
+        write_pin(m_gpio.outputs[1], static_cast<uint8_t>(Direction::Forward) >> 1);
+        //std::cerr << "Forward " << m_gpio.outputs[0] << " "<<  m_gpio.outputs[1] << std::endl;
     }
     else if(pwm < 0)
     {
-        write_pin(0, static_cast<uint8_t>(Direction::Backwards) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Backwards) >> 1);
+       write_pin(m_gpio.outputs[0], static_cast<uint8_t>(Direction::Backwards) & 1);
+       write_pin(m_gpio.outputs[1], static_cast<uint8_t>(Direction::Backwards) >> 1);
+       //std::cerr << "Backwards" << std::endl;
     }
     else
     {
-        write_pin(0, static_cast<uint8_t>(Direction::Stop) & 1);
-        write_pin(0, static_cast<uint8_t>(Direction::Stop) >> 1);   
+      write_pin(m_gpio.outputs[0], static_cast<uint8_t>(Direction::Stop) & 1);
+      write_pin(m_gpio.outputs[1], static_cast<uint8_t>(Direction::Stop) >> 1);
+      //std::cerr << "Stop" << std::endl;
     }
 
-    lgTxPwm(handle, m_gpio.outputs[2], PWM_FREQ, pwm, 0, 0);
+    lgTxPwm(handle, m_gpio.outputs[2], PWM_FREQ, 50, 0, 0);
 
-   // std::cout << "pwm set " << pwm << std::endl;
+    //std::cout << "pwm set " << pwm << std::endl;
     return 0;
 }
 
