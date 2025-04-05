@@ -13,9 +13,6 @@ class Motor {
 
   Motor(int id, std::unique_ptr<GPIOInterface> gpio);
   int setup();
-  void read_encoder();
-  void estimate_speed(int window, double Ts);
-  int run();
   void set_input(int pwm);
   void stop();
 
@@ -24,6 +21,8 @@ class Motor {
   }
 
  private:
+  void read_encoder();
+  void estimate_speed(int window, double Ts);
   std::unique_ptr<GPIOInterface> m_gpio;
   int id_;
   double encoder_ = 0.0;

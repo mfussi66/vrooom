@@ -39,29 +39,10 @@ void Motor::estimate_speed(int window, double Ts)
    //  }
 }
 
-int Motor::run()
-{
-   while (!should_stop.test())
-   {
-      //read_encoder();
-
-      mtx_pwm_.lock();
-      m_gpio->set_pwm(pwm_ * kv);
-      direction_sign_ = (pwm_ > 0) - (pwm_ < 0);
-      mtx_pwm_.unlock();
-      
-     // std::cout << std::format("motor {} pwm {}", id_, pwm_ ) << std::endl;
-      std::this_thread::sleep_for(10ms);
-   }
-
-   return 0;
-}
-
 void Motor::set_input(int pwm)
 {
-   mtx_pwm_.lock();
-   pwm_ = pwm;
-   mtx_pwm_.unlock();
+   m_gpio->set_pwm(pwm * kv);
+   direction_sign_ = (pwm > 0) - (pwm < 0);
 }
 
 void Motor::stop()

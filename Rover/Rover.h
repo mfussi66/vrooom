@@ -25,7 +25,7 @@ private:
 
    void run();
 
-   void run_speed_ctrl();
+   void run_pwm_ctrl();
 
    void compute_odometry(double wl, double wr);
 

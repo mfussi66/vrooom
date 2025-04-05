@@ -33,10 +33,6 @@ int main(int argc, char *argv[])
       input = argv[argc-1];
    }
 
-
-
-   bool use_sim = (input == "--sim");
-
    if (input == "--sim")
    {
       std::cout << "Using simulation mode" << std::endl;

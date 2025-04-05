@@ -32,20 +32,16 @@ int Rover::start()
 	if (r < 0)
 	{
 		std::cerr << "Could not set up motors!" << std::endl;
-		return -1;
+		return r;
 	}
 
-    std::thread tml(&Motor::run, left_wheel.get());
-    std::thread tmr(&Motor::run, right_wheel.get());
     std::thread rr(&Rover::run, this);
     
     rr.join();
-    tml.join();
-    tmr.join();
 
     close();
 
-    return 0;
+    return r;
 }
 
 void Rover::run()
@@ -53,8 +49,8 @@ void Rover::run()
     while(!should_stop.test())
     {
         communicator->lcm_ptr->handleTimeout(5);
-        run_speed_ctrl();
-        std::this_thread::sleep_for(20ms);
+        run_pwm_ctrl();
+        std::this_thread::sleep_for(10ms);
     }
 }
 
@@ -76,7 +72,7 @@ void Rover::compute_odometry(double wl, double wr)
     double W = (wr - wl);
 }
 
-void Rover::run_speed_ctrl()
+void Rover::run_pwm_ctrl()
 {
     auto refs = communicator->get_twist_references();
 
