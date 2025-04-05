@@ -5,11 +5,9 @@
 
 class mockHardware : public GPIOInterface
 {
-private:
-    
 public:
     mockHardware(/* args */);
-    ~mockHardware();
+    ~mockHardware(){};
 
     int setup() override;
     int read_encoder() override;

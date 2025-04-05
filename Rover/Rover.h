@@ -17,6 +17,16 @@
 
 class Rover
 {
+public:
+   Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
+   ~Rover(){};
+
+   static constexpr double R = 0.03; // cm
+
+   int start();
+   void stop();
+   void close();
+
 private:
 
    std::unique_ptr<Motor> left_wheel;
@@ -28,16 +38,4 @@ private:
    void run_pwm_ctrl();
 
    void compute_odometry(double wl, double wr);
-
-public:
-   Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterface> gpio_r);
-   ~Rover();
-
-   static constexpr double R = 0.03; // cm
-
-   int start();
-
-   void stop();
-
-   void close();
 };

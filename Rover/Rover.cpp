@@ -18,10 +18,6 @@ Rover::Rover(std::unique_ptr<GPIOInterface> gpio_l, std::unique_ptr<GPIOInterfac
     communicator = std::make_unique<Comms>("/twist.set");
 }
 
-Rover::~Rover()
-{
-}
-
 int Rover::start()
 {
 	int r = 0;

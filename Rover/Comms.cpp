@@ -40,7 +40,3 @@ void Comms::publishCommands(double pwm_l,
                                  .pwm = {pwm_l, pwm_r}};
   lcm_ptr->publish("rover.pwm.set", &c);
 }
-
-Comms::~Comms()
-{
-}
