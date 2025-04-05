@@ -11,8 +11,8 @@ https://github.com/user-attachments/assets/805820c6-bf3b-44b4-9f49-7b28ad689da9
 
 ### Dependencies
 - `lcm` for interprocess-communication (locally or between machines)
-- `lgpio` for controlling the Pi pins.
-
+- `lgpio` for controlling the Pi pins
+- `libevdev-devel` for building the joypad application.
 ### Build instructions
 
 To compile:
