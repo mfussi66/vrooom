@@ -46,9 +46,9 @@ int Hardware::setup() {
   return r;
 }
 
-int Hardware::read_pin(uint8_t pin) {
-  int v = lgGpioRead(handle, pin);
-  return v;
+int Hardware::read_encoder()
+{
+  return lgGpioRead(handle, m_gpio.outputs[0]);
 }
 
 int Hardware::write_pin(uint8_t pin, int value) {

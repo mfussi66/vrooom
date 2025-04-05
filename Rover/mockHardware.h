@@ -12,7 +12,6 @@ public:
     ~mockHardware();
 
     int setup() override;
-    int read_pin(uint8_t pin) override;
-    int write_pin(uint8_t pin, int value) override;
+    int read_encoder() override;
     int set_pwm(int pwm) override;
 };

@@ -32,11 +32,7 @@ public:
         return 0;
     };
 
-    // virtual int claim_input(uint8_t pin) = 0;
-    // virtual int claim_outputs(const int* pin, int size) = 0;
-    virtual int read_pin(uint8_t pin)= 0;
-    virtual int write_pin(uint8_t pin, int value) = 0;
+    virtual int read_encoder() = 0;
     virtual int set_pwm(int pwm) = 0;
-
 };
 

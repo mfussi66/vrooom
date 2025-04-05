@@ -22,7 +22,7 @@ int Motor::setup()
 
 void Motor::read_encoder()
 {
-   int v = m_gpio->read_pin(0);
+   int v = m_gpio->read_encoder();
    encoder_ += direction_sign_ * abs(v - encoderPrev_);
    encoderPrev_ = v;
 }
