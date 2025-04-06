@@ -1,11 +1,10 @@
 #pragma once
 
+#include <GPIOInterface.h>
+
 #include <cmath>
 #include <memory>
 #include <mutex>
-
-#include "GPIOInterface.h"
-#include "globals.h"
 
 class Motor {
  public:

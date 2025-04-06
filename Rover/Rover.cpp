@@ -1,12 +1,11 @@
 #include <Motor.h>
 #include <Rover.h>
-#include <control.h>
-#include "mockHardware.h"
+#include <mockHardware.h>
+#include <globals.h>
 
 #include <iostream>
 #include <memory>
 #include <thread>
-#include <mutex>
 
 using namespace std::chrono_literals;
 

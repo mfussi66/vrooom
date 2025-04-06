@@ -2,11 +2,7 @@
 #include <globals.h>
 
 #include <stdlib.h>
-#include <iostream>
 #include <memory>
-#include <thread>
-
-using namespace std::chrono_literals;
 
 constexpr double kv = 0.05; // V/rpm
 

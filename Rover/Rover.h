@@ -1,9 +1,8 @@
 #pragma once
-#include "GPIOInterface.h"
+
+#include <GPIOInterface.h>
 #include <Motor.h>
 #include <Comms.h>
-
-#include <thread>
 
 // enum
 // {

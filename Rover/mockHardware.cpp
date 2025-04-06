@@ -1,5 +1,4 @@
-#include "mockHardware.h"
-#include <iostream>
+#include <mockHardware.h>
 
 mockHardware::mockHardware()
 {

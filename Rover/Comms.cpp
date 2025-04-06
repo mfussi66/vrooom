@@ -1,9 +1,10 @@
 #include <Comms.h>
 
+#include <rovertypes/motor_commands_t.hpp>
 #include <lcm/lcm-cpp.hpp>
+
 #include <chrono>
 #include <iostream>
-#include <rovertypes/motor_commands_t.hpp>
 
 Comms::Comms(const std::string &channel_name)
 {
