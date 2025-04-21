@@ -16,6 +16,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}
 target_sources(${PROJECT_NAME}
     PRIVATE
         main.cpp
+        Comms.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE my_lcmtypes-cpp ${LCM_NAMESPACE}lcm raylib)

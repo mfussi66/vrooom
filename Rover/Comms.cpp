@@ -28,8 +28,6 @@ void Comms::handleMessage(const lcm::ReceiveBuffer *rbuf,
 {
   wref_ = msg->w;
   vref_ = msg->v;
-
-  //std::cout << vref_ << " " << wref_ << std::endl;
 }
 
 void Comms::publishCommands(double pwm_l,
