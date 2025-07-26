@@ -6,7 +6,7 @@
 
 std::array<double, 2> pwm = {10, -10};
 
-void computeState(double& p_, double& theta_)
+void compute_state(double& p_, double& theta_)
 {
     double kv = 1;
     double R = 0.03;
@@ -35,9 +35,9 @@ int main(int argc, char *argv[]) {
 
   while (!WindowShouldClose()) {
 
-    comms.checkMessages();
+    comms.check_messages();
 
-    computeState(p, theta);
+    compute_state(p, theta);
 
     std::cerr << theta << std::endl;
 

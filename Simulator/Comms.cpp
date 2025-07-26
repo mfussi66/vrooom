@@ -15,14 +15,14 @@ Comms::Comms(const std::string &channel_name)
     std::cout << "lcm is NOT good" << std::endl;
   }
 
-  sub = lcm_ptr->subscribe(channel_name, &Comms::handleMessage, this);
+  sub = lcm_ptr->subscribe(channel_name, &Comms::handle_commands_msg, this);
   sub->setQueueCapacity(10);
 
   std::cout << "Reading inputs from " << channel_name << std::endl;
 
 }
 
-void Comms::handleMessage(const lcm::ReceiveBuffer *rbuf,
+void Comms::handle_commands_msg(const lcm::ReceiveBuffer *rbuf,
                           const std::string &chan,
                           const rovertypes::motor_commands_t *msg)
 {

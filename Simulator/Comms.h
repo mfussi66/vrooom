@@ -14,7 +14,7 @@ class Comms {
 
   void publishState();
 
-  inline void checkMessages()
+  inline void check_messages()
   {
     lcm_ptr->handleTimeout(5);
   }
@@ -24,6 +24,6 @@ class Comms {
   lcm::Subscription *sub;
   std::array<double, 2> pwm;
 
-  void handleMessage(const lcm::ReceiveBuffer *rbuf, const std::string &chan,
+  void handle_commands_msg(const lcm::ReceiveBuffer *rbuf, const std::string &chan,
                      const rovertypes::motor_commands_t *msg);
 };
